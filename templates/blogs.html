@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Blogs</h1>
+
+<a href="/add_blog" class="btn btn-success mb-3">
+    Create Blog
+</a>
+
+{% if blogs %}
+
+    {% for blog in blogs %}
+
+        <div class="card p-4 mb-3">
+
+            <h3>{{ blog.title }}</h3>
+
+            <p>{{ blog.content }}</p>
+
+            {% if blog.user_id == current_user.id %}
+
+                <a href="/delete_blog/{{ blog.id }}" class="btn btn-danger">
+                    Delete
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No blogs yet.</p>
+
+{% endif %}
+
+{% endblock %}

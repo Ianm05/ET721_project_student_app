@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Your Tasks</h1>
+
+<a href="/add_task" class="btn btn-primary mb-3">
+    Add New Task
+</a>
+
+{% if tasks %}
+
+    {% for task in tasks %}
+
+        <div class="card p-3 mb-3">
+
+            <h4>{{ task.title }}</h4>
+
+            <p>
+                Category: {{ task.category }}
+            </p>
+
+            <p>
+                Status:
+
+                {% if task.completed %}
+                     Completed
+                {% else %}
+                     Not Completed
+                {% endif %}
+            </p>
+
+            {% if not task.completed %}
+
+                <a
+                    href="/complete_task/{{ task.id }}"
+                    class="btn btn-success"
+                >
+                    Mark Complete
+                </a>
+
+            {% endif %}
+
+            <a
+                href="/delete_task/{{ task.id }}"
+                class="btn btn-danger mt-2"
+            >
+                Delete
+            </a>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No tasks yet.</p>
+
+{% endif %}
+
+{% endblock %}

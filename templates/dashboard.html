@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Dashboard</h1>
+
+<h3>Welcome, {{ current_user.username }}!</h3>
+
+<div class="card p-4 mt-4">
+
+    <h4>Your Student Tools</h4>
+
+    <ul>
+        <li>To-Do List</li>
+        <li>Blogs</li>
+        <li>Upload Notes</li>
+    </ul>
+
+</div>
+
+{% endblock %}
