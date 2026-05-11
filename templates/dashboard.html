@@ -2,19 +2,82 @@
 
 {% block content %}
 
-<h1>Dashboard</h1>
+<div class="text-center mb-5">
 
-<h3>Welcome, {{ current_user.username }}!</h3>
+    <h1 class="display-4">
+        Welcome, {{ current_user.username }}!
+    </h1>
 
-<div class="card p-4 mt-4">
+    <p class="lead">
+        Manage your academic life all in one place.
+    </p>
 
-    <h4>Your Student Tools</h4>
+</div>
 
-    <ul>
-        <li>To-Do List</li>
-        <li>Blogs</li>
-        <li>Upload Notes</li>
-    </ul>
+<div class="row">
+
+    <!-- TASKS -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow p-4 mb-4">
+
+            <h2>📝 Tasks</h2>
+
+            <p>
+                Manage homework, deadlines,
+                and personal goals.
+            </p>
+
+            <a href="/tasks" class="btn btn-primary">
+                Open Tasks
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- BLOGS -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow p-4 mb-4">
+
+            <h2>📚 Blogs</h2>
+
+            <p>
+                Share learning experiences
+                and study tips.
+            </p>
+
+            <a href="/blogs" class="btn btn-success">
+                Open Blogs
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- NOTES -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow p-4 mb-4">
+
+            <h2>📸 Notes</h2>
+
+            <p>
+                Upload and organize
+                your study notes.
+            </p>
+
+            <a href="/notes" class="btn btn-warning">
+                Open Notes
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
 

@@ -2,12 +2,15 @@ from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 
 # Configuration
 app.config['SECRET_KEY'] = 'mysecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 # Initialize database
 db = SQLAlchemy(app)
@@ -43,6 +46,23 @@ class Blog(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
+class Note(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    filename = db.Column(
+        db.String(300),
+        nullable=False
+    )
+
+    subject = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id')
+    )
 # --------------------
 # USER LOADER
 # --------------------
@@ -237,6 +257,60 @@ def delete_blog(id):
 
     flash('Blog deleted!')
     return redirect(url_for('blogs'))
+
+# --------------------
+# NOTE ROUTES
+# --------------------
+
+@app.route('/notes')
+@login_required
+def notes():
+
+    user_notes = Note.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    return render_template(
+        'notes.html',
+        notes=user_notes
+    )
+
+
+@app.route('/upload_note', methods=['GET', 'POST'])
+@login_required
+def upload_note():
+
+    if request.method == 'POST':
+
+        file = request.files['note_image']
+
+        subject = request.form.get('subject')
+
+        if file:
+
+            filename = secure_filename(file.filename)
+
+            filepath = os.path.join(
+                app.config['UPLOAD_FOLDER'],
+                filename
+            )
+
+            file.save(filepath)
+
+            new_note = Note(
+                filename=filename,
+                subject=subject,
+                user_id=current_user.id
+            )
+
+            db.session.add(new_note)
+            db.session.commit()
+
+            flash('Note uploaded successfully!')
+
+            return redirect(url_for('notes'))
+
+    return render_template('upload_note.html')
 
 
 # --------------------
