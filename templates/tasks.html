@@ -3,7 +3,6 @@
 {% block content %}
 
 <h1>Your Tasks</h1>
-
 <a href="/add_task" class="btn btn-primary mb-3">
     Add New Task
 </a>
@@ -38,8 +37,9 @@
                 >
                     Mark Complete
                 </a>
-
-            {% endif %}
+                <p>Created: {{ task.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+            
+                    {% endif %}
 
             <a
                 href="/delete_task/{{ task.id }}"

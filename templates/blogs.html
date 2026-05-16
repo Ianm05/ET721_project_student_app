@@ -23,7 +23,8 @@
                 <a href="/delete_blog/{{ blog.id }}" class="btn btn-danger">
                     Delete
                 </a>
-
+            
+                <p>Posted: {{ blog.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
             {% endif %}
 
         </div>

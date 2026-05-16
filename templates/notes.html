@@ -24,6 +24,12 @@
 
             <p>{{ note.filename }}</p>
 
+            <a href="/delete_note/{{ note.id }}"
+               class="btn btn-danger">
+                Delete
+            </a>
+
+           <p> Noted: {{ note.created_at.strftime('%B %d, %Y at %I:%M %p') }} </P>
         </div>
 
     {% endfor %}
@@ -33,5 +39,6 @@
     <p>No uploaded notes yet.</p>
 
 {% endif %}
+
 
 {% endblock %}

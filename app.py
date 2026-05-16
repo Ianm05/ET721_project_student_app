@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -33,18 +34,53 @@ class User(UserMixin, db.Model):
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    category = db.Column(db.String(100), nullable=False)
-    completed = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    title = db.Column(
+        db.String(200),
+        nullable=False
+    )
 
+    category = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    completed = db.Column(
+        db.Boolean,
+        default=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id')
+    )
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    title = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    content = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id')
+    )
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,6 +99,11 @@ class Note(db.Model):
         db.Integer,
         db.ForeignKey('user.id')
     )
+    created_at = db.Column(
+    db.DateTime,
+    default=datetime.utcnow
+)
+    
 # --------------------
 # USER LOADER
 # --------------------
@@ -311,8 +352,37 @@ def upload_note():
             return redirect(url_for('notes'))
 
     return render_template('upload_note.html')
+    
 
 
+@app.route('/delete_note/<int:id>')
+@login_required
+def delete_note(id):
+
+    note = Note.query.get_or_404(id)
+
+    if note.user_id != current_user.id:
+
+        flash('Unauthorized access')
+
+        return redirect(url_for('notes'))
+
+    filepath = os.path.join(
+        app.config['UPLOAD_FOLDER'],
+        note.filename
+    )
+
+    # delete image file from uploads folder
+    if os.path.exists(filepath):
+        os.remove(filepath)
+
+    db.session.delete(note)
+
+    db.session.commit()
+
+    flash('Note deleted successfully!')
+
+    return redirect(url_for('notes'))
 # --------------------
 # LOGOUT
 # --------------------
